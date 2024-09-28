@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribute Time</title>
+</head>
+<body>
+    <h1>Distribute Time Equally Among Students</h1>
+    <label for="minutes">Total Minutes:</label>
+    <input type="number" id="minutes" name="minutes" required>
+    <br><br>
+    <label for="students">Number of Students:</label>
+    <input type="number" id="students" name="students" required>
+    <br><br>
+    <button onclick="calculateTime()">Calculate</button>
+    <p id="result"></p>
+
+    <script>
+        function distributeTime(minutes, students) {
+            if (students === 0) {
+                return "Number of students cannot be zero.";
+            }
+            
+            let timePerStudent = minutes / students;
+            return timePerStudent;
+        }
+
+        function calculateTime() {
+            let totalMinutes = document.getElementById('minutes').value;
+            let numberOfStudents = document.getElementById('students').value;
+
+            if (totalMinutes === '' || numberOfStudents === '') {
+                document.getElementById('result').innerText = "Please enter both values.";
+                return;
+            }
+
+            totalMinutes = parseFloat(totalMinutes);
+            numberOfStudents = parseInt(numberOfStudents);
+
+            let timeForEachStudent = distributeTime(totalMinutes, numberOfStudents);
+            document.getElementById('result').innerText = "Each student gets " + timeForEachStudent + " minutes.";
+        }
+    </script>
+</body>
+</html>
