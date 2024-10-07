@@ -13,7 +13,7 @@ const StudentTable = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(false); // A boolean state that toggles the visibility of the form for adding new students.
 
   // Effect to calculate time slots whenever the student list changes
   useEffect(() => {

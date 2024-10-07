@@ -11,6 +11,9 @@ function Information() {
   const [displayEnsemble, setDisplayEnsemble] = useState(''); // State to display ensemble time in h1
   const [displayRepertoire, setDisplayRepertoire] = useState(''); // State to display repertoire in h1
 
+
+  
+
   // Handlers for input change
   const weekNumberHandler = (e) => {
     setWeekInfo(e.target.value);
@@ -45,6 +48,31 @@ function Information() {
     setDisplayRepertoire(repertoire); // Display repertoire when button is clicked
   };
 
+  const deleteWeekButton = () => {
+
+      setDisplayWeek('')
+      setWeekInfo('')
+    }
+
+  const deleteDataButton = () => {
+
+     setDisplayDate('')
+     setFullDate('')
+  }
+
+  const buttonTimeDelete = () => {
+
+    setDisplayEnsemble('')
+    setEnsembleTime('')
+  }
+
+
+  const buttonRepertoireDelete = () => {
+    setDisplayRepertoire('')
+    setRepertoire('')
+
+  }
+
   return (
     <div>
       {/* Week Input */}
@@ -56,7 +84,9 @@ function Information() {
         onChange={weekNumberHandler}
       />
       <button onClick={buttonAddWeek}>Add Week</button>
-      <h1>Week Information: {displayWeek}</h1>
+      <button onClick={deleteWeekButton}>Delete Week</button>
+      <h1 className='weekInfo'>Week Information: {displayWeek}</h1>
+      
 
       {/* Full Date Input */}
       <label htmlFor="newDateInfo">Full Date</label>
@@ -67,6 +97,7 @@ function Information() {
         onChange={fullDateHandler}
       />
       <button onClick={buttonAddFullData}>Add Date</button>
+      <button onClick={deleteDataButton}> Delete Data</button>
       <h1>Full Date Information: {displayDate}</h1>
 
       {/* Ensemble Time Input */}
@@ -78,6 +109,7 @@ function Information() {
         onChange={ensembleTimeHandler}
       />
       <button onClick={buttonAddEnsembleTime}>Add Ensemble Time</button>
+      <button onClick={buttonTimeDelete}> Delete Time </button>
       <h1>Ensemble Time Information: {displayEnsemble}</h1>
 
       {/* Repertoire Input */}
@@ -89,6 +121,7 @@ function Information() {
         onChange={repertoireHandler}
       />
       <button onClick={buttonRepertoire}>Add Repertoire</button>
+      <button onClick={buttonRepertoireDelete}> Delete Repertoire </button>
       <h1>Repertoire Information: {displayRepertoire}</h1>
     </div>
   );
