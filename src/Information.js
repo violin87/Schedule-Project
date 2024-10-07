@@ -11,6 +11,9 @@ function Information() {
   const [displayEnsemble, setDisplayEnsemble] = useState(''); // State to display ensemble time in h1
   const [displayRepertoire, setDisplayRepertoire] = useState(''); // State to display repertoire in h1
 
+
+  
+
   // Handlers for input change
   const weekNumberHandler = (e) => {
     setWeekInfo(e.target.value);
@@ -45,6 +48,31 @@ function Information() {
     setDisplayRepertoire(repertoire); // Display repertoire when button is clicked
   };
 
+  const deleteWeekButton = () => {
+
+      setDisplayWeek('')
+      setWeekInfo('')
+    }
+
+  const deleteDataButton = () => {
+
+     setDisplayDate('')
+     setFullDate('')
+  }
+
+  const buttonTimeDelete = () => {
+
+    setDisplayEnsemble('')
+    setEnsembleTime('')
+  }
+
+
+  const buttonRepertoireDelete = () => {
+    setDisplayRepertoire('')
+    setRepertoire('')
+
+  }
+
   return (
     <div>
       {/* Week Input */}
@@ -56,7 +84,9 @@ function Information() {
         onChange={weekNumberHandler}
       />
       <button onClick={buttonAddWeek}>Add Week</button>
-      <h1>Week Information: {displayWeek}</h1>
+      <button onClick={deleteWeekButton}>Delete Week</button>
+      <h1 className='weekInfo'>Week Information: {displayWeek}</h1>
+      
 
       {/* Full Date Input */}
       <label htmlFor="newDateInfo">Full Date</label>
@@ -67,6 +97,7 @@ function Information() {
         onChange={fullDateHandler}
       />
       <button onClick={buttonAddFullData}>Add Date</button>
+      <button onClick={deleteDataButton}> Delete Data</button>
       <h1>Full Date Information: {displayDate}</h1>
 
       {/* Ensemble Time Input */}
@@ -78,6 +109,7 @@ function Information() {
         onChange={ensembleTimeHandler}
       />
       <button onClick={buttonAddEnsembleTime}>Add Ensemble Time</button>
+      <button onClick={buttonTimeDelete}> Delete Time </button>
       <h1>Ensemble Time Information: {displayEnsemble}</h1>
 
       {/* Repertoire Input */}
@@ -89,6 +121,7 @@ function Information() {
         onChange={repertoireHandler}
       />
       <button onClick={buttonRepertoire}>Add Repertoire</button>
+      <button onClick={buttonRepertoireDelete}> Delete Repertoire </button>
       <h1>Repertoire Information: {displayRepertoire}</h1>
     </div>
   );
@@ -115,113 +148,3 @@ export default Information;
 
 
 
-// import React from 'react'
-// import {useState} from 'react'
-
-// function Information () {
-
-
-//  const [weekInfo, setWeekInfo] = useState([])
-//  const [fullDate, setFullDate] =  useState([])
-//  const [repertoire, setRepertoire] = useState([])
-
-//  const weekNumberHandler = (e) => {
-
-
-//       setWeekInfo(e.target.value)
-//  }
-
-//  const datesTimeInformation = (e) => {
-
-
-
-//      setFullDate(e.target.value)
-//  }
-
-//  const lessonTImeHandler = (e) => {
-
-
-//      setFullDate(e.target.value)
-
-//  }
-
-//  const repertoireAddHandler = (e) => {
-
-
-//      setRepertoire(e.target.value)
-
-//  }
-
-//  //buttons
-
-
-//  const buttonAddWeek = () =>  {
-   
-
-//      console.log(weekInfo)
-
-
-
-    
-
-
-
-// }
-
-
-// const buttonAddFullData = () =>  {
-
-//     setFullDate(fullDate)
-
-// }
-
-
-// const buttonAddEnsembleTime= () =>  {
-
-//     setFullDate(fullDate)
-
-
-
-// }
-
-// const buttonRepertoire = () =>  {
-
-//     setRepertoire(repertoire)
-
-
-
-// }
-
-
-
-//     return (
-
-//     <div>
-
-
-// <label id = 'newWeekInfo' name = 'newWeekInfo'>  Week </label>
-// <input id = 'newWeekInfo' className='newWeekInfo' value= {weekInfo} onChange={weekNumberHandler}></input>
-// <button onClick = {buttonAddWeek}> Add Week</button>
-// <h1> {buttonAddWeek}</h1>
-
-
-
-// <label id = 'newDateInfo' name = 'newDateInfo'>  Full Date </label>
-// <input id = 'newDateInfo' className='newDateInfo' value= {fullDate} onChange={datesTimeInformation}></input>
-// <button onClick={buttonAddFullData}> Add Date</button>
-
-
-// <label id = 'newEnsTimeInfo' name = 'newEnsTimeInfo'>  Ensemble Time </label>
-// <input id = 'newEnsTimeInfo' className='newEnsTimeInfo' value = {fullDate} onChange={datesTimeInformation}></input>
-// <button onClick = {lessonTImeHandler}> Ensemble Time </button>
-
-
-// <label id = 'newRepertoireInfo' name = 'newRepertoireInfo'>  Repertoire </label>
-// <input id = 'newRepertoireInfo' className='newRepertoireInfo' value = {repertoire} onChange={repertoireAddHandler}></input>
-// <button onClick = {buttonRepertoire}> Add Repertoire</button>
-// </div>
-//     )
-
-// }
-
-// export default Information
