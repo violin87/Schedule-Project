@@ -1,16 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
-import StudentTable from './table';
+import React, { useState } from 'react';
 import Information from './Information';
-function App() {
+import StudentTable from './table';
+
+const App = () => {
+  const [seminarData, setSeminarData] = useState(null);
+
+  const handleDataSubmit = (data) => {
+    setSeminarData(data);
+  };
+
   return (
-    <div className="App">
-     
-      <Information/>
-      <hr/>
-      <StudentTable/>
+    <div>
+      <Information onDataSubmit={handleDataSubmit} />
+      {seminarData && <StudentTable seminarData={seminarData} />}
     </div>
   );
-}
+};
 
 export default App;
+

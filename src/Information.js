@@ -1,131 +1,59 @@
 import React, { useState } from 'react';
 
-function Information() {
+const Information = ({ onDataSubmit }) => {
   const [weekInfo, setWeekInfo] = useState('');
   const [fullDate, setFullDate] = useState('');
-  const [ensembleTime, setEnsembleTime] = useState('');
-  const [repertoire, setRepertoire] = useState('');
+  const [breakStart, setBreakStart] = useState('');
+  const [breakEnd, setBreakEnd] = useState('');
 
-  const [displayWeek, setDisplayWeek] = useState(''); // State to display week info in h1
-  const [displayDate, setDisplayDate] = useState(''); // State to display full date in h1
-  const [displayEnsemble, setDisplayEnsemble] = useState(''); // State to display ensemble time in h1
-  const [displayRepertoire, setDisplayRepertoire] = useState(''); // State to display repertoire in h1
-
-
-  
-
-  // Handlers for input change
-  const weekNumberHandler = (e) => {
-    setWeekInfo(e.target.value);
+  const handleSubmit = () => {
+    const seminarData = {
+      weekInfo,
+      fullDate,
+      breakStart,
+      breakEnd,
+    };
+    onDataSubmit(seminarData); // Pass data to parent or sibling
   };
-
-  const fullDateHandler = (e) => {
-    setFullDate(e.target.value);
-  };
-
-  const ensembleTimeHandler = (e) => {
-    setEnsembleTime(e.target.value);
-  };
-
-  const repertoireHandler = (e) => {
-    setRepertoire(e.target.value);
-  };
-
-  // Button handlers to post the messages to h1
-  const buttonAddWeek = () => {
-    setDisplayWeek(weekInfo); // Display week info when button is clicked
-  };
-
-  const buttonAddFullData = () => {
-    setDisplayDate(fullDate); // Display full date when button is clicked
-  };
-
-  const buttonAddEnsembleTime = () => {
-    setDisplayEnsemble(ensembleTime); // Display ensemble time when button is clicked
-  };
-
-  const buttonRepertoire = () => {
-    setDisplayRepertoire(repertoire); // Display repertoire when button is clicked
-  };
-
-  const deleteWeekButton = () => {
-
-      setDisplayWeek('')
-      setWeekInfo('')
-    }
-
-  const deleteDataButton = () => {
-
-     setDisplayDate('')
-     setFullDate('')
-  }
-
-  const buttonTimeDelete = () => {
-
-    setDisplayEnsemble('')
-    setEnsembleTime('')
-  }
-
-
-  const buttonRepertoireDelete = () => {
-    setDisplayRepertoire('')
-    setRepertoire('')
-
-  }
 
   return (
     <div>
-      {/* Week Input */}
-      <label htmlFor="newWeekInfo">Week</label>
+      <h3>Week Information</h3>
       <input
-        id="newWeekInfo"
-        className="newWeekInfo"
+        type="text"
+        placeholder="Week"
         value={weekInfo}
-        onChange={weekNumberHandler}
+        onChange={(e) => setWeekInfo(e.target.value)}
       />
-      <button onClick={buttonAddWeek}>Add Week</button>
-      <button onClick={deleteWeekButton}>Delete Week</button>
-      <h1 className='weekInfo'>Week Information: {displayWeek}</h1>
-      
 
-      {/* Full Date Input */}
-      <label htmlFor="newDateInfo">Full Date</label>
+      <h3>Date & Time</h3>
       <input
-        id="newDateInfo"
-        className="newDateInfo"
+        type="text"
+        placeholder="Time/Day/Month/Year"
         value={fullDate}
-        onChange={fullDateHandler}
+        onChange={(e) => setFullDate(e.target.value)}
       />
-      <button onClick={buttonAddFullData}>Add Date</button>
-      <button onClick={deleteDataButton}> Delete Data</button>
-      <h1>Full Date Information: {displayDate}</h1>
 
-      {/* Ensemble Time Input */}
-      <label htmlFor="newEnsTimeInfo">Ensemble Time</label>
+      <h3>Break Start</h3>
       <input
-        id="newEnsTimeInfo"
-        className="newEnsTimeInfo"
-        value={ensembleTime}
-        onChange={ensembleTimeHandler}
+        type="text"
+        placeholder="Start Time (e.g., 11:00 AM)"
+        value={breakStart}
+        onChange={(e) => setBreakStart(e.target.value)}
       />
-      <button onClick={buttonAddEnsembleTime}>Add Ensemble Time</button>
-      <button onClick={buttonTimeDelete}> Delete Time </button>
-      <h1>Ensemble Time Information: {displayEnsemble}</h1>
 
-      {/* Repertoire Input */}
-      <label htmlFor="newRepertoireInfo">Repertoire</label>
+      <h3>Break End</h3>
       <input
-        id="newRepertoireInfo"
-        className="newRepertoireInfo"
-        value={repertoire}
-        onChange={repertoireHandler}
+        type="text"
+        placeholder="End Time (e.g., 11:30 AM)"
+        value={breakEnd}
+        onChange={(e) => setBreakEnd(e.target.value)}
       />
-      <button onClick={buttonRepertoire}>Add Repertoire</button>
-      <button onClick={buttonRepertoireDelete}> Delete Repertoire </button>
-      <h1>Repertoire Information: {displayRepertoire}</h1>
+
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
-}
+};
 
 export default Information;
 
