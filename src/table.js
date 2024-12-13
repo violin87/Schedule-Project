@@ -4,60 +4,96 @@ const StudentTable = ({ seminarData }) => {
   const [students, setStudents] = useState([]);
   const [timeSlots, setTimeSlots] = useState([]);
 
-  const { weekInfo, fullDate, breakStart, breakEnd } = seminarData || {};
+  const { weekInfo, fullDate, startSeminar, endSeminar, amountofStudents, breakStart, breakEnd } = seminarData || {};
 
   useEffect(() => {
     if (seminarData) updateSchedule();
   }, [seminarData, students]);
 
+  
   const updateSchedule = () => {
-    const startTimeBeforeBreak = 9.5; // Seminar start: 9:30 AM
-    const numStudents = students.length || 1;
-
+    if (
+      !startSeminar ||
+      !endSeminar ||
+      !breakStart ||
+      !breakEnd ||
+      amountofStudents <= 0
+    ) {
+      setTimeSlots([]);
+      console.error("Missing or invalid input values.");
+      return;
+    }
+  
+    // Convert times to decimal format
+    const startSeminarDecimal = convertToDecimal(startSeminar);
+    const endSeminarDecimal = convertToDecimal(endSeminar);
     const breakStartDecimal = convertToDecimal(breakStart);
     const breakEndDecimal = convertToDecimal(breakEnd);
-    const endTimeAfterBreak = 12.5; // Seminar end: 12:30 PM
-
-    const totalTimeBeforeBreak = (breakStartDecimal - startTimeBeforeBreak) * 60;
-    const totalTimeAfterBreak = (endTimeAfterBreak - breakEndDecimal) * 60;
-
-    const numStudentsBeforeBreak = Math.ceil(numStudents / 2);
-    const numStudentsAfterBreak = numStudents - numStudentsBeforeBreak;
-
-    const minutesPerStudentBeforeBreak = Math.floor(totalTimeBeforeBreak / numStudentsBeforeBreak);
-    const minutesPerStudentAfterBreak = Math.floor(totalTimeAfterBreak / numStudentsAfterBreak);
-
-    let currentTime = startTimeBeforeBreak;
+  
+    // Validate times
+    if (
+      startSeminarDecimal >= endSeminarDecimal ||
+      breakStartDecimal < startSeminarDecimal ||
+      breakEndDecimal > endSeminarDecimal ||
+      breakStartDecimal >= breakEndDecimal
+    ) {
+      setTimeSlots([]);
+      console.error("Invalid seminar or break times.");
+      return;
+    }
+  
+    // Calculate durations in minutes
+    const totalSeminarMinutes = (endSeminarDecimal - startSeminarDecimal) * 60;
+    const breakMinutes = (breakEndDecimal - breakStartDecimal) * 60;
+    const availableMinutes = totalSeminarMinutes - breakMinutes;
+  
+    if (availableMinutes <= 0) {
+      setTimeSlots([]);
+      console.error("Not enough time for students after accounting for the break.");
+      return;
+    }
+  
+    // Calculate time per student
+    const timePerStudent = availableMinutes / amountofStudents;
+  
     const newTimeSlots = [];
-
-    // Time slots before the break
-    for (let i = 0; i < numStudentsBeforeBreak; i++) {
-      const startTimeString = formatTime(currentTime);
-      currentTime += minutesPerStudentBeforeBreak / 60;
-      const endTimeString = formatTime(currentTime);
-      newTimeSlots.push(`${startTimeString} - ${endTimeString}`);
+    let beforeBreakTime = startSeminarDecimal;
+    let afterBreakTime = breakEndDecimal;
+  
+    for (let i = 0; i < amountofStudents; i++) {
+      if (i % 2 === 0) {
+        // Assign before-break timeslot
+        const startTimeString = formatTime(beforeBreakTime);
+        beforeBreakTime += timePerStudent / 60;
+  
+        // Ensure timeslot does not overlap the break
+        if (beforeBreakTime > breakStartDecimal) {
+          beforeBreakTime = breakStartDecimal;
+        }
+  
+        const endTimeString = formatTime(beforeBreakTime);
+        newTimeSlots.push(`${startTimeString} - ${endTimeString}`);
+      } else {
+        // Assign after-break timeslot
+        const startTimeString = formatTime(afterBreakTime);
+        afterBreakTime += timePerStudent / 60;
+  
+        // Ensure timeslot does not exceed seminar end time
+        if (afterBreakTime > endSeminarDecimal) {
+          afterBreakTime = endSeminarDecimal;
+        }
+  
+        const endTimeString = formatTime(afterBreakTime);
+        newTimeSlots.push(`${startTimeString} - ${endTimeString}`);
+      }
     }
-
-    // Skip the break
-    currentTime = breakEndDecimal;
-
-    // Time slots after the break
-    for (let i = 0; i < numStudentsAfterBreak; i++) {
-      const startTimeString = formatTime(currentTime);
-      currentTime += minutesPerStudentAfterBreak / 60;
-      const endTimeString = formatTime(currentTime);
-      newTimeSlots.push(`${startTimeString} - ${endTimeString}`);
-    }
-
+  
     setTimeSlots(newTimeSlots);
   };
-
-  const convertToDecimal = (time) => {
-    const [hour, minute] = time
-      .split(':')
-      .map((val) => parseInt(val.replace(/\D/g, '')));
-    const isPM = time.toLowerCase().includes('pm');
-    return (isPM && hour < 12 ? hour + 12 : hour) + minute / 60;
+  
+    const convertToDecimal = (time) => {
+    const [hour, minute] = time.split(':').map(Number);
+    return hour + minute / 60;
   };
 
   const formatTime = (decimalTime) => {
@@ -85,22 +121,21 @@ const StudentTable = ({ seminarData }) => {
     setStudents(updatedStudents);
   };
 
-
-  const deleteStudent = () => {
-
-
-      setStudents('')
-
-
-  }
+  const deleteStudents = () => {
+    setStudents([]);
+    setTimeSlots([]);
+  };
 
   return (
     <div>
-      <h2>{`Week: ${weekInfo}`}</h2>
-      <h3>{`Date: ${fullDate}`}</h3>
-      <h4>{`Break: ${breakStart} - ${breakEnd}`}</h4>
+      <h2>{`Week: ${weekInfo || ''}`}</h2>
+      <h3>{`Date: ${fullDate || ''}`}</h3>
+      <h4>{`Seminar: ${startSeminar || ''} - ${endSeminar || ''}`}</h4>
+      <h4>{`Break: ${breakStart || ''} - ${breakEnd || ''}`}</h4>
+      <h4>{`Amount of Students: ${amountofStudents || ''}`}</h4>
+
       <button onClick={addStudent}>Add Student</button>
-      <button onClick={deleteStudent}> Delete Student</button>
+      <button onClick={deleteStudents}>Clear All Students</button>
       <table>
         <thead>
           <tr>
@@ -111,16 +146,21 @@ const StudentTable = ({ seminarData }) => {
           </tr>
         </thead>
         <tbody>
-          {timeSlots.map((slot, index) => (
+        <tr>
+            <td>{breakStart}</td>
+            <td>{breakEnd}</td>
+            <td>Break</td>
+        </tr>
+          {students.map((student, index) => (
             <tr key={index}>
-              <td>{slot}</td>
+              <td>{timeSlots[index]}</td>
               <td>
                 <input
                   type="text"
                   placeholder="First Name"
-                  value={students[index]?.firstName || ''}
+                  value={student.firstName}
                   onChange={(e) =>
-                    saveStudent(index, e.target.value, students[index]?.lastName || '')
+                    saveStudent(index, e.target.value, student.lastName)
                   }
                 />
               </td>
@@ -128,9 +168,9 @@ const StudentTable = ({ seminarData }) => {
                 <input
                   type="text"
                   placeholder="Last Name"
-                  value={students[index]?.lastName || ''}
+                  value={student.lastName}
                   onChange={(e) =>
-                    saveStudent(index, students[index]?.firstName || '', e.target.value)
+                    saveStudent(index, student.firstName, e.target.value)
                   }
                 />
               </td>
@@ -146,6 +186,7 @@ const StudentTable = ({ seminarData }) => {
 };
 
 export default StudentTable;
+
 
 
 
